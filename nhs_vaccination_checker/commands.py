@@ -1,5 +1,6 @@
 import click
 from nhs_vaccination_checker.checker import NHSChecker
+from nhs_vaccination_checker import __version__
 
 
 @click.group()
@@ -17,3 +18,8 @@ def login(nhs_number: int, dob: str, booking_reference: int):
     n = NHSChecker()
     n.login(nhs_number=nhs_number, date_of_birth=dob, booking_ref=booking_reference)
     click.echo(n.appointment)
+
+
+@cli.command(help="Display application version.")
+def version():
+    click.echo(__version__)
