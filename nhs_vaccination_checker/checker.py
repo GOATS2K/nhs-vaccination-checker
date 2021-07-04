@@ -2,21 +2,36 @@ from nhs_vaccination_checker.exceptions import NotLoggedInError
 from typing import Dict, Union
 from bs4 import BeautifulSoup
 import requests
-import datetime
+from datetime import datetime
+from dataclasses import dataclass
 
 from requests.models import Response
+
+
+@dataclass
+class Location:
+    name: str
+    address: str
+    city: str
+    post_code: str
+
+
+@dataclass
+class Appointment:
+    location: Location
+    time: datetime
 
 
 class NHSChecker:
     def __init__(self) -> None:
         self.session = requests.Session()
         self.header = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36"  # noqa: E501
         }
         self.logged_in = False
 
     @property
-    def appointment(self):
+    def appointment(self) -> Appointment:
         if self.logged_in:
             return self._get_current_booking()
 
@@ -38,7 +53,7 @@ class NHSChecker:
         return post.url
 
     def _select_nhs_option(self) -> str:
-        url = "https://www.nhs.uk/book-a-coronavirus-vaccination/do-you-have-an-nhs-number"
+        url = "https://www.nhs.uk/book-a-coronavirus-vaccination/do-you-have-an-nhs-number"  # noqa: E501
         request_token = self._get_request_token_from_page(url)
         data = {"SelectedOption": "Yes", "__RequestVerificationToken": request_token}
         next_url = self._post_data(url, data)
@@ -55,7 +70,7 @@ class NHSChecker:
         correlation_token = self._get_request_token_from_page(
             url, token_name="CorrelationId"
         )
-        date_obj = datetime.datetime.strptime(date_of_birth, "%Y-%m-%d")
+        date_obj = datetime.strptime(date_of_birth, "%Y-%m-%d")
         data = {
             "CorrelationId": correlation_token,
             "Date.Day": date_obj.day,
@@ -87,7 +102,7 @@ class NHSChecker:
         ):
             self.logged_in = True
 
-    def _parse_appointment(self, content: Response.content) -> Dict[str, str]:
+    def _parse_appointment(self, content: Response.content) -> Appointment:
         soup = BeautifulSoup(content, "html.parser")
         appointment_card = soup.find(
             "div", {"class": "nhsuk-card nhsuk-u-margin-top-0"}
@@ -103,15 +118,19 @@ class NHSChecker:
             if not str(detail).strip() == "<br/>"
         ]
 
-        appointment = {
-            "location": {
-                "name": appointment_location[0],
-                "address": appointment_location[1],
-                "city": appointment_location[2],
-                "post_code": appointment_location[3],
-            },
-            "time": time,
-        }
+        location_data = Location(
+            name=appointment_location[0],
+            address=appointment_location[1],
+            city=appointment_location[2],
+            post_code=appointment_location[3],
+        )
+
+        formatted_date = datetime.strptime(time, "%d %B at %H:%M%p")
+
+        # Since the NHS doesn't give us a year, we have to set it ourselves.
+        formatted_date = formatted_date.replace(year=datetime.now().year)
+
+        appointment = Appointment(location=location_data, time=formatted_date)
 
         return appointment
 
