@@ -158,9 +158,13 @@ class NHSChecker:
             for row in appointment_rows
             if row.find("td", {"class": "nhsuk-table__cell nhsuk-table__cell--centred"})
         ]
-        appointment_as_datetime = [
-            datetime.strptime(date, "%Y-%m-%d") for date in appointment_dates
-        ]
+
+        if appointment_dates:
+            appointment_as_datetime = [
+                datetime.strptime(date, "%Y-%m-%d") for date in appointment_dates
+            ]
+        else:
+            return []
 
         return appointment_as_datetime
 
