@@ -1,5 +1,5 @@
 from nhs_vaccination_checker.exceptions import NotLoggedInError
-from typing import Dict, Union
+from typing import Dict, List, Union
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
@@ -36,6 +36,13 @@ class NHSChecker:
             return self._get_current_booking()
 
         raise NotLoggedInError("You must be logged in to see your appointment!")
+
+    @property
+    def available_appointments(self) -> List[datetime]:
+        if self.logged_in:
+            return self._check_availability()
+
+        raise NotLoggedInError("You must be logged in to see your available bookings!")
 
     def _extract_request_token(self, content: Response.content, token_name: str):
         soup = BeautifulSoup(content, "html.parser")
@@ -129,9 +136,7 @@ class NHSChecker:
 
         # Since the NHS doesn't give us a year, we have to set it ourselves.
         formatted_date = formatted_date.replace(year=datetime.now().year)
-
         appointment = Appointment(location=location_data, time=formatted_date)
-
         return appointment
 
     def _get_current_booking(self) -> Dict[str, str]:
@@ -140,8 +145,29 @@ class NHSChecker:
         )
         return self._parse_appointment(r.content)
 
-    def _store_future_booking(self):
-        pass
+    def _parse_available_appointments(
+        self, content: Response.content
+    ) -> List[datetime]:
+        soup = BeautifulSoup(content, "html.parser")
+        next_appointment_table = soup.find("tbody", {"class": "nhsuk-table__body"})
+        appointment_rows = next_appointment_table.find_all("tr")
+        appointment_dates = [
+            row.find(
+                "td", {"class": "nhsuk-table__cell nhsuk-table__cell--centred"}
+            ).time["datetime"]
+            for row in appointment_rows
+            if row.find("td", {"class": "nhsuk-table__cell nhsuk-table__cell--centred"})
+        ]
+        appointment_as_datetime = [
+            datetime.strptime(date, "%Y-%m-%d") for date in appointment_dates
+        ]
 
-    def check_availability(self):
-        pass
+        return appointment_as_datetime
+
+    def _check_availability(self) -> List[datetime]:
+        url = "https://www.nhs.uk/book-a-coronavirus-vaccination/current-bookings"
+        request_token = self._get_request_token_from_page(url)
+        next_url = self._post_data(url, {"__RequestVerificationToken": request_token})
+
+        r = self.session.get(next_url, headers=self.header)
+        return self._parse_available_appointments(r.content)
