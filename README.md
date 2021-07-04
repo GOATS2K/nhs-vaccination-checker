@@ -17,5 +17,11 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  login  Login to the vaccination manager.
+  appointment  Get your current appointment.
+  check        Checks for available appointments.
+  version      Display application version.
 ```
+
+Check for available appointments:
+
+`nhs-vaccination-checker check --nhs-number XXXXXXXXXX --dob XXXX-XX-XX --booking-reference XXXXXXXX`

@@ -30,7 +30,7 @@ def appointment(nhs_number: int, dob: str, booking_reference: int):
     click.secho(f"At {appointment.time.strftime('%Y-%m-%d %H:%M')}", fg="blue")
 
 
-@cli.command(help="Checks for available appointments")
+@cli.command(help="Checks for available appointments.")
 @click.option("--nhs-number", type=click.INT, help="Your NHS number, without spaces.")
 @click.option(
     "--dob", type=click.STRING, help="Your date of birth, formatted as YYYY-MM-DD."
