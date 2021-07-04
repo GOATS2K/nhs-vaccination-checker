@@ -42,9 +42,12 @@ def check(nhs_number: int, dob: str, booking_reference: int):
     current_appointment = n.appointment.time
     available_appointments = n.available_appointments
 
-    early_appointments = [
-        booking for booking in available_appointments if booking < current_appointment
-    ]
+    if available_appointments:
+        early_appointments = [
+            booking
+            for booking in available_appointments
+            if booking < current_appointment
+        ]
 
     if early_appointments:
         click.secho(
@@ -53,7 +56,8 @@ def check(nhs_number: int, dob: str, booking_reference: int):
         )
         for appointment in early_appointments:
             click.echo(appointment.strftime("%Y-%m-%d"))
-    else:
+
+    elif not early_appointments or not available_appointments:
         click.secho("No earlier bookings are available.", fg="red")
 
 
