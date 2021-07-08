@@ -1,7 +1,5 @@
 import configparser
 from pathlib import Path
-from re import S
-from typing import Dict
 from appdirs import user_data_dir
 import click
 
@@ -9,7 +7,12 @@ DATA_DIR = Path(user_data_dir("nhs-vaccination-checker"))
 CONFIG_PATH = Path(user_data_dir("nhs-vaccination-checker")) / "config.ini"
 
 config = configparser.ConfigParser()
-config["DEFAULT"] = {"nhs_number": "", "date_of_birth": "", "booking_reference": ""}
+config["DEFAULT"] = {
+    "nhs_number": "",
+    "date_of_birth": "",
+    "booking_reference": "",
+    "pushbullet_token": "",
+}
 
 
 def write_config() -> None:

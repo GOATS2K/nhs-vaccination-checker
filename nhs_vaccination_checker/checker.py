@@ -29,6 +29,7 @@ class NHSChecker:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36"  # noqa: E501
         }
         self.logged_in = False
+        self.logged_in_time = None
 
     @property
     def appointment(self) -> Appointment:
@@ -108,6 +109,7 @@ class NHSChecker:
             == "https://www.nhs.uk/book-a-coronavirus-vaccination/current-bookings"
         ):
             self.logged_in = True
+            self.logged_in_time = datetime.now()
 
     def _parse_appointment(self, content: Response.content) -> Appointment:
         soup = BeautifulSoup(content, "html.parser")
