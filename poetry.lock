@@ -1,5 +1,5 @@
 [[package]]
-category = "dev"
+category = "main"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 name = "appdirs"
 optional = false
@@ -309,7 +309,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "96c63f4acfdc7cfe346e78f5f1f00c72572146a73ae2aa85de1cdff39969d432"
+content-hash = "d1a990363336ea94d19d011be167302679ecb1ac8f073255f8876a21eb11f931"
 python-versions = "^3.8"
 
 [metadata.files]
