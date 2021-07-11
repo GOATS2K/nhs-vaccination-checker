@@ -8,7 +8,7 @@ from nhs_vaccination_checker.config import (
 )
 
 if not DATA_DIR.exists():
-    DATA_DIR.mkdir()
+    DATA_DIR.mkdir(parents=True)
     write_config()
 else:
     if not CONFIG_PATH.exists():
