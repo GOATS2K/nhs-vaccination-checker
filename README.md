@@ -1,6 +1,6 @@
 # NHS Vaccination Booking Checker
 
-This tool is made to check for earlier availability of vaccine slots on [NHS.uk](https://nhs.uk).
+Check for earlier availability of vaccine slots on [NHS.uk](https://nhs.uk).
 
 **Disclaimer**: I am not affiliated with the NHS, nor is this tool endorsed by them.
 
