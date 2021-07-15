@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from nhs_vaccination_checker.config import (
     DATA_DIR,

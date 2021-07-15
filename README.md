@@ -5,7 +5,7 @@ Check for earlier availability of second dose slots on [NHS.uk](https://nhs.uk).
 **Disclaimer**: I am not affiliated with the NHS, nor is this tool endorsed by them.
 
 # Dependencies
-- Python 3.8 and above
+- Python 3.7 and above
 - An already existing vaccination booking
 
 # Installation

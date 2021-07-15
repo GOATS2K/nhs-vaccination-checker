@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "nhs-vaccination-checker"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 license = "MIT"
 authors = ["GOATS2K <jp@glattetre.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 beautifulsoup4 = "^4.9.3"
 requests = "^2.25.1"
 click = "^8.0.1"

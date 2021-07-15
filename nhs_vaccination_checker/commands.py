@@ -19,7 +19,7 @@ def get_early_appointments(n: NHSChecker) -> List[str]:
         early_appointments = [
             booking
             for booking in available_appointments
-            if booking < current_appointment
+            if booking.date() < current_appointment.date()
         ]
 
     return early_appointments
